@@ -1,0 +1,866 @@
+/*=====================================
+  BỘ SƯU TẬP CÁC BIẾN CSS (CSS Variables)
+=====================================*/
+:root {
+    --dark-navy: #0A192F;
+    --navy: #0D213D;
+    --light-navy: #172A45;
+    --lightest-navy: #233554;
+    --slate: #8892B0;
+    --light-slate: #A8B2D1;
+    --lightest-slate: #CCD6F6;
+    --green: #64FFDA; /* Màu xanh lá đặc trưng */
+    --white: #E6F1FF;
+
+    --font-sans: 'Open Sans', sans-serif;
+    --font-mono: 'Montserrat', sans-serif; /* Dùng Montserrat cho tiêu đề và các yếu tố kỹ thuật */
+
+    --fz-xxs: 12px;
+    --fz-xs: 13px;
+    --fz-sm: 14px;
+    --fz-md: 16px;
+    --fz-lg: 18px;
+    --fz-xl: 20px;
+    --fz-xxl: 22px;
+    --fz-heading: 32px; /* Cho h2 sections */
+
+    /* Biến cho thanh cuộn */
+    --scrollbar-width: 8px; /* Chiều rộng thanh cuộn dọc */
+    --scrollbar-height: 8px; /* Chiều cao thanh cuộn ngang */
+    --scrollbar-thumb-color: rgba(100, 255, 218, 0.4); /* Màu của thanh trượt (thumb) */
+    --scrollbar-track-color: transparent; /* Màu nền của rãnh cuộn (track) */
+    --scrollbar-thumb-hover-color: var(--green); /* Màu thanh trượt khi hover */
+}
+
+
+/*=====================================
+  THIẾT LẬP LẠI TOÀN CỤC VÀ STYLE CƠ SỞ (Global Resets & Base Styles)
+=====================================*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    /* --- TÙY CHỈNH THANH CUỘN TOÀN TRANG (NẾU CÓ) --- */
+    /* Áp dụng cho cả thanh cuộn dọc và ngang của toàn bộ tài liệu */
+    /* Đảm bảo không có thanh cuộn ngang mặc định của html trừ khi thực sự cần thiết */
+    overflow-x: hidden;
+}
+
+/* --- TÙY CHỈNH THANH CUỘN CHO HTML (TOÀN TRANG) - CHỈ TRÊN WEBKIT BROWSERS --- */
+/* Thanh cuộn dọc */
+html::-webkit-scrollbar {
+    width: var(--scrollbar-width); /* Chiều rộng của thanh cuộn dọc */
+    height: var(--scrollbar-height); /* Chiều cao của thanh cuộn ngang */
+}
+
+html::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color); /* Nền của rãnh cuộn */
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color); /* Màu của thanh trượt */
+    border-radius: 10px; /* Bo tròn thanh trượt */
+    border: 2px solid var(--dark-navy); /* Viền màu nền để làm cho nó trông mỏng hơn một chút */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover-color); /* Màu thanh trượt khi hover */
+}
+/* --- KẾT THÚC TÙY CHỈNH THANH CUỘN TOÀN TRANG --- */
+
+
+body {
+    font-family: var(--font-sans);
+    font-size: var(--fz-md);
+    line-height: 1.6;
+    background-color: var(--dark-navy);
+    color: var(--slate);
+    -webkit-font-smoothing: antialiased; /* Tăng cường khả năng hiển thị font */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    text-decoration: none;
+    color: var(--green); /* Mặc định link màu xanh lá */
+    transition: color 0.25s cubic-bezier(0.645, 0.045, 0.355, 1); /* Hiệu ứng chuyển động mượt mà */
+}
+
+a:hover,
+a:focus {
+    color: var(--green); /* Giữ nguyên màu xanh khi hover/focus */
+}
+
+ul {
+    list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--lightest-slate);
+}
+
+
+/*=====================================
+  LAYOUT CHÍNH (Main Layout - 2 Cột)
+=====================================*/
+.main-layout {
+    position: relative; /* Quan trọng: Parent của fixed element */
+    display: flex;
+    min-height: 100vh;
+    max-width: 1200px; /* Giới hạn chiều rộng tổng thể của trang */
+    margin: 0 auto; /* Căn giữa trang */
+    padding: 0 30px; /* Padding tổng thể cho 2 cột */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Đã có từ trước */
+    background-color: var(--dark-navy); /* Đã có từ trước */
+    /* Đảm bảo không có thanh cuộn ngang do chính layout này gây ra nếu nó có thể tràn */
+    overflow-x: hidden;
+}
+
+
+/*=====================================
+  SIDEBAR (Cột Trái)
+=====================================*/
+.sidebar {
+    position: fixed; /* Sidebar sẽ cố định khi cuộn */
+    top: 0; /* Gắn vào đỉnh viewport */
+    min-width: 280px; /* Đảm bảo sidebar không quá hẹp */
+    height: 100vh; /* Đảm bảo sidebar chiếm toàn bộ chiều cao màn hình */
+    overflow-y: auto; /* Trả lại auto để thanh cuộn dọc hiện khi cần */
+    overflow-x: hidden; /* Đảm bảo không có thanh cuộn ngang trong sidebar */
+    box-sizing: border-box; /* Đảm bảo padding không làm tràn width/height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Đẩy social links xuống cuối */
+    align-items: flex-start;
+    width: 320px; /* Chiều rộng mặc định của sidebar */
+    padding: 100px 30px 50px 0;
+}
+
+/* --- TÙY CHỈNH THANH CUỘN CỦA SIDEBAR (CHỈ TRÊN WEBKIT BROWSERS) --- */
+.sidebar::-webkit-scrollbar {
+    width: var(--scrollbar-width); /* Chiều rộng của thanh cuộn dọc */
+    height: var(--scrollbar-height); /* Chiều cao của thanh cuộn ngang (nếu có) */
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color); /* Nền của rãnh cuộn */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color); /* Màu của thanh trượt */
+    border-radius: 10px; /* Bo tròn thanh trượt */
+    border: 2px solid var(--dark-navy); /* Viền màu nền để làm cho nó trông mỏng hơn một chút nếu muốn */
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover-color); /* Màu thanh trượt khi hover */
+}
+/* --- KẾT THÚC TÙY CHỈNH THANH CUỘN --- */
+
+
+/* Sidebar Headings */
+.sidebar h1 {
+    font-size: 30px; /* ĐÃ ĐIỀU CHỈNH: Giảm kích thước font xuống 32px */
+    color: var(--lightest-slate);
+    margin-bottom: 10px;
+    white-space: nowrap; /* Quan trọng: Đảm bảo tên trên một hàng */
+    overflow: hidden; /* Quan trọng: Ẩn phần bị tràn */
+    text-overflow: ellipsis; /* Quan trọng: Hiển thị dấu ba chấm nếu tràn */
+    max-width: 100%; /* Đảm bảo tên có thể chiếm 100% chiều rộng của phần tử cha */
+    line-height: 1.2;
+}
+
+/* Đảm bảo div.sidebar-content không làm hẹp h1 */
+.sidebar-content {
+    width: 100%; /* Đảm bảo div này chiếm toàn bộ chiều rộng có thể */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Căn lề trái nội dung */
+}
+
+
+.sidebar h2 {
+    font-size: clamp(18px, 2.5vw, 24px);
+    color: var(--lightest-slate);
+    margin-bottom: 20px;
+    max-width: 100%; /* Đảm bảo h2 không tràn */
+    white-space: normal; /* Cho phép xuống dòng nếu cần */
+    text-align: left;
+}
+
+.sidebar .tagline-bio {
+    font-size: var(--fz-md);
+    color: var(--slate);
+    margin-bottom: 40px;
+    max-width: 100%;
+    text-align: left;
+}
+
+/* --- Profile Image & Contact Info --- */
+.profile-image-container {
+    width: 150px; /* Kích thước khung ảnh */
+    height: 150px;
+    border-radius: 50%; /* Làm cho khung ảnh tròn */
+    overflow: hidden; /* Cắt ảnh theo hình tròn */
+    margin: 0 auto 35px auto; /* Đã điều chỉnh khoảng cách dưới ảnh */
+    border: 3px solid var(--green); /* Viền màu xanh nổi bật */
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.4); /* Bóng đổ nhẹ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-image {
+    width: 100%; /* Ảnh lấp đầy khung */
+    height: 100%;
+    object-fit: cover; /* Đảm bảo ảnh không bị méo, cắt nếu cần */
+    display: block;
+}
+
+.contact-info {
+    margin-top: 20px;
+    margin-bottom: 40px; /* Tạo khoảng cách với navigation */
+    text-align: left; /* Căn trái thông tin liên hệ */
+    padding: 0 0; /* ĐÃ ĐIỀU CHỈNH: Bỏ padding ngang nếu sidebar đã có padding */
+    width: 100%;
+}
+
+.contact-info p {
+    font-size: var(--fz-md);
+    color: var(--light-slate);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa icon và text */
+}
+
+.contact-info p i {
+    color: var(--green);
+    font-size: 1.1em;
+    flex-shrink: 0; /* Đảm bảo icon không bị co lại */
+}
+
+.contact-info a {
+    color: var(--light-slate);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: var(--green);
+}
+
+/* Main Navigation */
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 50px 0;
+    width: 100%;
+}
+
+.main-nav li {
+    margin-bottom: 10px;
+}
+
+.main-nav a {
+    display: inline-block; /* Để padding và transform hoạt động */
+    padding: 8px 0;
+    color: var(--slate);
+    font-family: var(--font-mono);
+    font-size: var(--fz-sm);
+    letter-spacing: 0.1em; /* Khoảng cách chữ */
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    color: var(--lightest-slate);
+    transform: translateX(5px); /* Hiệu ứng dịch sang phải khi hover/active */
+}
+
+/* Active Nav Link Underline Effect */
+.main-nav a.active {
+    position: relative;
+}
+.main-nav a.active::before {
+    content: "";
+    position: absolute;
+    left: -15px; /* Vị trí của gạch chân */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--green);
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    margin-top: auto; /* Đẩy xuống cuối sidebar */
+    width: 100%;
+    border-top: 1px solid var(--lightest-navy);
+    padding-top: 20px;
+}
+
+.social-links a {
+    font-size: var(--fz-xl);
+    color: var(--light-slate);
+    margin-right: 20px;
+}
+
+/* Social Links Bounce Effect */
+.social-links a:hover {
+    animation: bounce 0.6s ease-in-out; /* Áp dụng hiệu ứng bounce */
+    color: var(--green); /* Giữ màu xanh lá */
+}
+
+
+/*=====================================
+  KHU VỰC NỘI DUNG CHÍNH (Content Area - Cột Phải)
+=====================================*/
+.content-area {
+    flex: 1; /* Chiếm hết không gian còn lại */
+    margin-left: 430px; /* Khoảng trống lớn hơn cho sidebar mới (320px sidebar + 30px gap) */
+    padding-right: 30px; /* Padding giữa sidebar và nội dung chính */
+    padding-bottom: 100px; /* Đảm bảo có khoảng trống cuối trang */
+    /* Đảm bảo không có thanh cuộn ngang trong content-area nếu không cần thiết */
+    overflow-x: hidden;
+}
+
+section {
+    padding: 80px 0; /* Padding cho mỗi section */
+}
+
+/* Section Headings */
+.section-heading {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 10px 0 20px;
+    width: 100%;
+    font-size: var(--fz-xxl);
+    white-space: nowrap; /* Cần kiểm tra: Nếu tiêu đề quá dài, đây có thể là nguyên nhân gây tràn */
+    text-align: left;
+    color: var(--lightest-slate);
+}
+
+.section-heading::after {
+    content: "";
+    display: block;
+    position: relative;
+    top: -5px;
+    height: 1px;
+    margin-left: 20px;
+    background-color: var(--lightest-navy);
+    width: 0;
+    max-width: 300px;
+}
+
+/* Animation for section heading line */
+.section-heading.animate-line::after {
+    animation: drawLine 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+    width: var(--final-line-width, 100%);
+}
+
+
+/*=====================================
+  CÁC SECTION CỤ THỂ
+=====================================*/
+
+/* --- About Section --- */
+.about-text-content p {
+    margin-bottom: 20px;
+    color: var(--slate);
+}
+
+/* --- Skills & Expertise Section --- */
+.skills-expertise-section {
+    min-height: auto;
+    padding: 80px 0;
+}
+
+.skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+    max-width: 700px;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.skill-category-card {
+    background-color: var(--light-navy);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(2, 12, 27, 0.7);
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Enhanced hover effect for skill cards */
+.skill-category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(2, 12, 27, 0.9);
+}
+
+.skill-category-card h3 {
+    color: var(--lightest-slate);
+    font-size: var(--fz-lg);
+    margin-bottom: 10px;
+}
+
+.skill-category-card p {
+    color: var(--slate);
+    font-size: var(--fz-sm);
+    line-height: 1.4;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.skill-tags li {
+    background-color: rgba(100, 255, 218, 0.15);
+    color: var(--green);
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: var(--fz-xxs);
+    font-family: var(--font-mono);
+    margin: 0 6px 6px 0;
+    white-space: nowrap;
+}
+
+/* --- Projects Section --- */
+.projects-section {
+    min-height: auto;
+}
+.projects-section p {
+    color: var(--slate);
+    margin-bottom: 30px;
+}
+
+.project-card {
+    background-color: var(--light-navy);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px -5px rgba(2, 12, 27, 0.7);
+    margin-bottom: 20px;
+    transition: transform 0.2s ease-in-out;
+}
+/* Enhanced hover effect for project cards */
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(2, 12, 27, 0.9);
+}
+.project-card h3 {
+    font-size: var(--fz-lg);
+    margin-bottom: 5px;
+}
+.project-card h3 a {
+    color: var(--lightest-slate);
+}
+.project-card .project-meta {
+    font-size: var(--fz-xs);
+    color: var(--green);
+    font-family: var(--font-mono);
+    margin-bottom: 10px;
+}
+.project-card .project-description {
+    font-size: var(--fz-md);
+    color: var(--slate);
+    margin-bottom: 15px;
+}
+
+/* Bold text within project description */
+.project-card .project-description strong {
+    font-weight: 900;
+    color: var(--lightest-slate);
+}
+
+.project-card .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+.project-card .project-tags li {
+    background-color: rgba(100, 255, 218, 0.1);
+    color: var(--green);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: var(--fz-xxs);
+    font-family: var(--font-mono);
+    margin: 0 6px 6px 0;
+}
+
+/* Project Links */
+.project-card .project-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 15px;
+}
+.project-card .project-links a {
+    font-size: var(--fz-md);
+    color: var(--light-slate);
+    margin-right: 0;
+    margin-bottom: 10px;
+    white-space: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.project-card .project-links a:hover {
+    color: var(--green);
+}
+.project-card .project-links a i {
+    font-size: var(--fz-xl);
+    flex-shrink: 0;
+}
+
+/* Project Content Wrapper (Image and Text Side-by-Side) */
+.project-card .project-content-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.project-card .project-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--navy);
+    border: 1px solid var(--lightest-navy);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.project-card .project-image img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(2, 12, 27, 0.8);
+    display: block;
+}
+
+/* Project Text Content */
+.project-card .project-text-content {
+    flex-grow: 1;
+}
+
+/* --- Contact Section --- */
+.contact-section {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 100px 0;
+    min-height: auto;
+}
+.contact-section .section-heading {
+    justify-content: center;
+}
+.contact-section .section-heading::after {
+    display: none;
+}
+.contact-section .contact-text {
+    color: var(--slate);
+    margin-bottom: 40px;
+    font-size: var(--fz-lg);
+}
+.btn-contact {
+    display: inline-block;
+    padding: 15px 30px;
+    border: 1px solid var(--green);
+    border-radius: 4px;
+    color: var(--green);
+    font-size: var(--fz-md);
+    font-family: var(--font-mono);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.btn-contact:hover {
+    background-color: rgba(100, 255, 218, 0.1);
+    transform: translateY(-3px);
+}
+
+
+/*=====================================
+  KEYFRAMES & ANIMATIONS
+=====================================*/
+
+/* Keyframes for fade-in and slide-up effect */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Keyframes for social icon bounce effect */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-8px);
+    }
+    60% {
+        transform: translateY(-4px);
+    }
+}
+
+/* Keyframes for section heading line draw effect */
+@keyframes drawLine {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--final-line-width, 100%);
+    }
+}
+
+/* Base style for elements that will animate on scroll */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/*=====================================
+  THIẾT KẾ ĐÁP ỨNG (Responsive Design - Media Queries)
+=====================================*/
+
+/* For screens larger than 768px but less than or equal to 1200px (Laptops/Larger Tablets) */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .main-layout {
+        padding: 0 25px;
+    }
+    .sidebar {
+        left: 25px;
+        width: 280px; /* Giảm chiều rộng sidebar một chút */
+        padding: 80px 25px 50px 0;
+    }
+    .sidebar h1 { /* Điều chỉnh cho màn hình laptop/tablet lớn */
+        font-size: 30px; /* ĐÃ ĐIỀU CHỈNH: Giảm font size cho màn hình này */
+        max-width: 100%;
+    }
+    .content-area {
+        margin-left: 310px; /* Điều chỉnh margin-left cho phù hợp với sidebar mới */
+        padding-right: 10px;
+    }
+    .profile-image-container {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* For tablets and smaller desktops (<= 1080px) */
+@media (max-width: 1080px) {
+    .main-layout {
+        padding: 0 20px;
+    }
+    .sidebar {
+        width: 250px; /* Giảm chiều rộng sidebar hơn nữa */
+        padding: 80px 20px 50px 0;
+        left: 20px;
+    }
+    .sidebar h1 { /* ĐÃ ĐIỀU CHỈNH: Đảm bảo tên vẫn trên 1 hàng trên tablet */
+        font-size: 28px; /* ĐÃ ĐIỀU CHỈNH: Giảm font size cho tablet */
+        max-width: 100%;
+    }
+    .content-area {
+        margin-left: 280px; /* Điều chỉnh margin-left cho sidebar mới */
+        padding-left: 20px;
+    }
+    .section-heading {
+        font-size: var(--fz-xl);
+    }
+    .section-heading::after {
+        max-width: 150px;
+    }
+    .social-links a {
+        font-size: var(--fz-lg);
+        margin-right: 15px;
+    }
+    .project-card .project-content-wrapper {
+        gap: 20px;
+    }
+    .project-card .project-image {
+        max-width: 120px;
+        border-radius: 8px;
+    }
+    .project-card .project-image img {
+        border-radius: 5px;
+    }
+    .profile-image-container {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+/* For mobile devices (<= 768px) */
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+        padding: 20px;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    .sidebar {
+        position: relative;
+        width: 100%; /* Sidebar chiếm 100% chiều rộng */
+        padding: 20px 0;
+        border-right: none;
+        border-bottom: none;
+        margin-bottom: 20px;
+        align-items: center; /* Căn giữa nội dung sidebar trên mobile */
+        text-align: center;
+        height: auto;
+        overflow-y: visible;
+        overflow-x: hidden;
+        left: auto;
+        padding-right: 0;
+    }
+    /* Ẩn hoàn toàn thanh cuộn WebKit trên mobile cho sidebar để trông gọn gàng */
+    .sidebar::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+        background: transparent;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+
+    .sidebar h1 {
+        font-size: 32px; /* ĐÃ ĐIỀU CHỈNH: Kích thước font phù hợp cho mobile, không quá lớn */
+        max-width: 100%; /* Đảm bảo tên có thể chiếm 100% chiều rộng của sidebar content */
+        margin-bottom: 5px;
+    }
+
+    .sidebar h2 {
+        font-size: var(--fz-lg);
+        margin-bottom: 15px;
+    }
+
+    .sidebar .tagline-bio {
+        text-align: center;
+        font-size: var(--fz-sm);
+        margin-bottom: 15px;
+    }
+
+    .main-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .main-nav li {
+        margin: 0 10px 10px 10px;
+    }
+    .main-nav a {
+        padding: 5px 0;
+        font-size: var(--fz-xs);
+    }
+    .main-nav a:hover,
+    .main-nav a.active {
+        transform: none;
+    }
+    .main-nav a.active::before {
+        display: none;
+    }
+    .social-links {
+        justify-content: center;
+        border-top: none;
+        padding-top: 0;
+    }
+    .social-links a {
+        margin: 0 10px;
+    }
+
+    .content-area {
+        margin-left: 0;
+        padding-left: 0;
+        padding-bottom: 50px;
+        overflow-x: hidden;
+    }
+    section {
+        padding: 50px 0;
+    }
+    .section-heading {
+        font-size: var(--fz-xl);
+        text-align: center;
+        justify-content: center;
+    }
+    .section-heading::after {
+        width: 80px;
+        margin-left: 10px;
+    }
+
+    .skills-grid {
+        flex-direction: column;
+        gap: 15px;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile-image-container {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 20px;
+    }
+    .contact-info {
+        text-align: center;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    .contact-info p {
+        justify-content: center;
+    }
+    .project-card .project-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .project-card .project-image {
+        max-width: 90%;
+        width: auto;
+        margin-bottom: 15px;
+        margin-right: 0;
+        border-radius: 15px;
+        padding: 10px;
+    }
+    .project-card .project-image img {
+        border-radius: 12px;
+    }
+}
